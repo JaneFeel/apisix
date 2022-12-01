@@ -275,6 +275,20 @@ function _M.access(conf, ctx)
         return 500, {error_msg = "failed to limit count"}
     end
 
+    if conf_key == "route_id" and conf.key_type == "var" then
+        local route_id = ctx.var[conf_key]
+        if route_id then
+            local remain_count
+            remain_count = remaining == 'rejected' and 0 or remaining
+            local v
+            v = {
+                id = route_id,
+                count = remain_count
+            }
+            core.etcd.set("/route_limit_count/" .. route_id, v, conf.time_window)
+        end
+    end
+
     if conf.show_limit_quota_header then
         core.response.set_header("X-RateLimit-Limit", conf.count,
             "X-RateLimit-Remaining", remaining)

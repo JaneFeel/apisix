@@ -325,7 +325,7 @@ function _M.set_by_route(route, api_ctx)
         return 503, err
     end
 
-    if nodes_count > 1 then
+    if nodes_count > 0 then
         local checker = fetch_healthchecker(up_conf)
         api_ctx.up_checker = checker
     end
